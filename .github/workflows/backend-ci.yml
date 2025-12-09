@@ -12,6 +12,11 @@ on:
       - 'Backend/**'
       - '.github/workflows/backend-ci.yml'
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   build-and-test:
     name: Build and Test Backend
@@ -40,17 +45,27 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
       continue-on-error: true
 
-    - name: Publish test results
-      uses: dorny/test-reporter@v1
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: Backend Test Results
-        path: Backend/**/TestResults/*.trx
-        reporter: dotnet-trx
-        fail-on-error: false
+        name: test-results
+        path: |
+          Backend/**/TestResults/*.trx
+          Backend/**/TestResults/**/coverage.cobertura.xml
+        retention-days: 7
+
+    - name: Test Report Summary
+      if: always()
+      shell: pwsh
+      run: |
+        Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Test Results Summary"
+        Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+        Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "Test results have been uploaded as artifacts."
+        Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "Download the artifacts to view detailed test reports."
 
     - name: Publish build artifacts
       uses: actions/upload-artifact@v4

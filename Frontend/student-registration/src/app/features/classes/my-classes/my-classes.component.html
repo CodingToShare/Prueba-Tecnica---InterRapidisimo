@@ -1,0 +1,77 @@
+<div class="my-classes-container">
+  <h1>Mis Clases y Compañeros</h1>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Cargando tus clases y compañeros...</p>
+    </div>
+  } @else {
+    @if (classesDetails.length) {
+      <mat-accordion class="classes-accordion">
+        @for (classDetail of classesDetails; track classDetail.id) {
+          <mat-expansion-panel
+            class="class-panel"
+            [ngClass]="{
+              'cancelled': classDetail.status === 'Cancelled' || classDetail.status === 'Dropped',
+              'completed': classDetail.status === 'Completed',
+              'active': classDetail.status === 'Active'
+            }">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>school</mat-icon>
+                <span class="subject-name">{{ classDetail.subjectName }}</span>
+                @if (classDetail.status === 'Cancelled' || classDetail.status === 'Dropped') {
+                  <span class="status-badge cancelled-badge">
+                    <mat-icon>cancel</mat-icon>
+                    Cancelada
+                  </span>
+                }
+                @if (classDetail.status === 'Completed') {
+                  <span class="status-badge completed-badge">
+                    <mat-icon>check_circle</mat-icon>
+                    Completada
+                  </span>
+                }
+                @if (classDetail.status === 'Active') {
+                  <span class="status-badge active-badge">
+                    <mat-icon>check_circle</mat-icon>
+                    Activa
+                  </span>
+                }
+              </mat-panel-title>
+              <mat-panel-description>
+                Profesor: {{ classDetail.professorFullName }} - Horario: {{ classDetail.schedule }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="classmates-list">
+              @if (classDetail.status === 'Cancelled' || classDetail.status === 'Dropped') {
+                <div class="cancelled-message">
+                  <mat-icon>info</mat-icon>
+                  <p>Esta inscripción ha sido cancelada. Ya no apareces en la lista de estudiantes de esta clase.</p>
+                </div>
+              } @else {
+                <h3>Compañeros de Clase ({{ classDetail.classmates.length }})</h3>
+                @if (classDetail.classmates.length) {
+                  <ul>
+                    @for (classmate of classDetail.classmates; track $index) {
+                      <li><mat-icon>person</mat-icon> {{ classmate }}</li>
+                    }
+                  </ul>
+                } @else {
+                  <p>No se encontraron compañeros para esta clase aún.</p>
+                }
+              }
+            </div>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    } @else {
+      <div class="no-classes">
+        <p>No estás inscrito en ninguna clase con compañeros visibles.</p>
+        <p>¡Inscríbete en algunas materias para ver a tus compañeros!</p>
+      </div>
+    }
+  }
+</div>

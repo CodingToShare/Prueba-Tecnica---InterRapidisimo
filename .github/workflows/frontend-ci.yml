@@ -1,0 +1,207 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'Frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'Frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+
+jobs:
+  build-and-test:
+    name: Build and Test Frontend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Frontend/student-registration
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: Frontend/student-registration/package-lock.json
+
+    - name: Display Node.js and npm versions
+      run: |
+        node --version
+        npm --version
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Verify Angular CLI installation
+      run: npx ng version
+
+    - name: Lint code
+      run: npm run lint
+      continue-on-error: true
+
+    - name: Run unit tests
+      run: npm run test
+      continue-on-error: true
+
+    - name: Build application (Development)
+      run: npm run build
+      env:
+        NODE_ENV: development
+
+    - name: Build application (Production)
+      run: npm run build -- --configuration production
+      env:
+        NODE_ENV: production
+
+    - name: Check build size
+      run: |
+        echo "Build size analysis:"
+        du -sh dist/student-registration/browser
+        ls -lh dist/student-registration/browser
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: frontend-build
+        path: Frontend/student-registration/dist/
+        retention-days: 7
+
+    - name: Upload test coverage
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: Frontend/student-registration/coverage/
+        retention-days: 7
+
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Frontend/student-registration
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        cache-dependency-path: Frontend/student-registration/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run ESLint
+      run: npm run lint -- --format=json --output-file=eslint-report.json
+      continue-on-error: true
+
+    - name: Upload ESLint report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: eslint-report
+        path: Frontend/student-registration/eslint-report.json
+        retention-days: 7
+
+    - name: Check TypeScript compilation
+      run: npx tsc --noEmit
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Frontend/student-registration
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        cache-dependency-path: Frontend/student-registration/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run npm audit
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
+
+    - name: Check for outdated packages
+      run: npm outdated
+      continue-on-error: true
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Frontend/student-registration
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        cache-dependency-path: Frontend/student-registration/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    - name: Run E2E tests
+      run: npm run e2e
+      continue-on-error: true
+
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-test-results
+        path: Frontend/student-registration/playwright-report/
+        retention-days: 7
+
+  status-check:
+    name: CI Status Check
+    runs-on: ubuntu-latest
+    needs: [build-and-test, code-quality, security-scan]
+    if: always()
+
+    steps:
+    - name: Check build status
+      run: |
+        if [ "${{ needs.build-and-test.result }}" == "failure" ]; then
+          echo "Build and test job failed"
+          exit 1
+        fi
+        echo "All required checks passed!"

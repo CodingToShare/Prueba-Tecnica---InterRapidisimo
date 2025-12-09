@@ -1,0 +1,49 @@
+<div class="enrollments-list-container">
+  <h1>Mis Materias Inscritas</h1>
+
+  <button mat-raised-button color="primary" routerLink="/app/enrollments/browse-offerings">
+    <mat-icon>add</mat-icon> Buscar Nuevas Materias
+  </button>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Cargando tus inscripciones...</p>
+    </div>
+  } @else {
+    @if (enrollments.length) {
+      <div class="enrollments-cards-container">
+        @for (enrollment of enrollments; track enrollment.id) {
+          <mat-card class="enrollment-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>book</mat-icon>
+              <mat-card-title>{{ enrollment.subjectName }}</mat-card-title>
+              <mat-card-subtitle>{{ enrollment.professorFullName }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Código:</strong> {{ enrollment.subjectCode }}</p>
+              <p><strong>Créditos:</strong> {{ enrollment.credits }}</p>
+              <p><strong>Periodo:</strong> {{ enrollment.academicPeriod }}</p>
+              <p><strong>Horario:</strong> {{ enrollment.schedule }}</p>
+              <p><strong>Estado:</strong> {{ enrollment.status }}</p>
+              @if (enrollment.notes) {
+                <p><strong>Notas:</strong> {{ enrollment.notes }}</p>
+              }
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button mat-button color="warn" (click)="cancelEnrollment(enrollment.id)">
+                <mat-icon>cancel</mat-icon> Cancelar
+              </button>
+              <!-- <button mat-button color="accent">Ver Compañeros</button> -->
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    } @else {
+      <div class="no-enrollments">
+        <p>No tienes materias inscritas aún.</p>
+        <p>¡Explora la oferta académica para empezar!</p>
+      </div>
+    }
+  }
+</div>

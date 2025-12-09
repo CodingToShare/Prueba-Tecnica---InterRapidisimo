@@ -1,0 +1,159 @@
+.dashboard-container {
+  padding: 0;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.welcome-header {
+  margin-bottom: 40px;
+  padding: 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: var(--radius-lg);
+  color: white;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  p {
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+  padding: 0 4px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-card {
+  position: relative;
+  background: white;
+  border-left: 4px solid transparent;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+
+  &:nth-child(1) {
+    border-left-color: #667eea;
+  }
+
+  &:nth-child(2) {
+    border-left-color: #06b6d4;
+  }
+
+  &:nth-child(3) {
+    border-left-color: #10b981;
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  mat-card-header {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border-bottom: 1px solid var(--border-color);
+
+    .mat-mdc-card-avatar {
+      font-size: 48px;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  mat-card-title {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  mat-card-subtitle {
+    font-size: 1em;
+    margin-top: 4px;
+    color: var(--text-secondary);
+  }
+
+  mat-card-content {
+    padding: 24px;
+
+    p {
+      margin: 12px 0;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      line-height: 1.6;
+
+      strong {
+        color: #667eea;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .enrollment-count {
+    font-size: 1.15em;
+    margin-top: 20px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: var(--radius-md);
+    text-align: center;
+
+    strong {
+      font-size: 2em;
+      color: #667eea;
+      font-weight: 700;
+      display: inline-block;
+      margin: 0 4px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  animation: fadeIn 0.3s ease-out;
+
+  mat-spinner {
+    margin-bottom: 24px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+}

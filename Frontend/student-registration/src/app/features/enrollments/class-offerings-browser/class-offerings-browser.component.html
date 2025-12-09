@@ -1,0 +1,75 @@
+<div class="class-offerings-browser-container">
+  <h1>Explorar Oferta Académica</h1>
+
+  <div class="current-enrollment-summary">
+    Tienes {{ currentEnrollmentCount }} de {{ maxEnrollments }} materias inscritas.
+    @if (currentEnrollmentCount >= maxEnrollments) {
+      <span class="limit-reached"> (Límite alcanzado)</span>
+    }
+  </div>
+
+  <form [formGroup]="filterForm" class="filter-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Buscar por Materia, Profesor o Código</mat-label>
+      <input matInput formControlName="search">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </form>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Cargando oferta académica...</p>
+    </div>
+  } @else {
+    @if (filteredOfferings.length) {
+      <div class="offerings-cards-container">
+        @for (offering of filteredOfferings; track offering.id) {
+          <mat-card class="offering-card" [class.can-enroll]="offering.canEnroll">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>book</mat-icon>
+              <mat-card-title>{{ offering.subjectName }}</mat-card-title>
+              <mat-card-subtitle>Profesor: {{ offering.professorFullName }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Código:</strong> {{ offering.subjectCode }}</p>
+              <p><strong>Créditos:</strong> {{ offering.credits }}</p>
+              <p><strong>Periodo:</strong> {{ offering.academicPeriod }}</p>
+              <p><strong>Horario:</strong> {{ offering.schedule }}</p>
+              <p><strong>Cupos:</strong> {{ offering.currentEnrollmentCount }} / {{ offering.maxCapacity }}
+                @if (offering.hasAvailableSpots) {
+                  <span class="status-available">(Disponible)</span>
+                } @else {
+                  <span class="status-unavailable">(Sin Cupos)</span>
+                }
+              </p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button mat-raised-button
+                      color="primary"
+                      (click)="enrollInClass(offering.id)"
+                      [disabled]="!offering.canEnroll || isEnrolling">
+                @if (!isEnrolling) {
+                  <ng-container>
+                    <mat-icon>add</mat-icon> Inscribirme
+                  </ng-container>
+                } @else {
+                  <ng-container>
+                    <mat-spinner [diameter]="24"></mat-spinner>
+                  </ng-container>
+                }
+              </button>
+              @if (!offering.canEnroll && offering.reasonCannotEnroll) {
+                <span class="reason-cannot-enroll">{{ offering.reasonCannotEnroll }}</span>
+              }
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    } @else {
+      <div class="no-offerings">
+        <p>No se encontraron materias disponibles con los filtros actuales.</p>
+      </div>
+    }
+  }
+</div>

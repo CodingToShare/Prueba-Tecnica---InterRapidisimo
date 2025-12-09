@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet:*)",
+      "Bash(if not exist \"Controllers\" mkdir Controllers)",
+      "Bash(if exist \"Controllers\" dir Controllers)",
+      "Bash(tree:*)",
+      "Bash(grep:*)",
+      "Bash(timeout 15 dotnet run:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(pkill:*)",
+      "Bash(taskkill //F //PID 177696)",
+      "Bash(tasklist /FI \"IMAGENAME eq dotnet.exe\" /FO CSV)",
+      "Bash(taskkill //F //PID 168076)",
+      "Bash(tasklist:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

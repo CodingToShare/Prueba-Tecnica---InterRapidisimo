@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir node_moduleszone.js)",
+      "Bash(npm install:*)",
+      "Bash(ng build:*)",
+      "Bash(timeout 30 ng build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,570 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* ========================================
+   VARIABLES GLOBALES
+   ======================================== */
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+  --secondary-color: #06b6d4;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --background-color: #f8fafc;
+  --surface-color: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+}
+
+/* ========================================
+   RESET Y ESTILOS BASE
+   ======================================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ========================================
+   UTILIDADES
+   ======================================== */
+.full-width {
+  width: 100%;
+}
+
+/* ========================================
+   ANIMACIONES GLOBALES
+   ======================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* ========================================
+   ESTILOS PERSONALIZADOS DE MATERIAL
+   ======================================== */
+
+/* Botones mejorados */
+.mat-mdc-raised-button {
+  border-radius: var(--radius-md) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  text-transform: none !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-normal) !important;
+
+  &:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg) !important;
+  }
+
+  &:active:not([disabled]) {
+    transform: translateY(0);
+  }
+}
+
+.mat-mdc-button {
+  border-radius: var(--radius-md) !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  transition: all var(--transition-fast) !important;
+}
+
+/* Cards mejoradas */
+.mat-mdc-card {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-normal) !important;
+  border: 1px solid var(--border-color) !important;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: var(--shadow-lg) !important;
+    transform: translateY(-4px);
+  }
+}
+
+/* Form fields mejorados */
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    border-radius: var(--radius-md) !important;
+    background-color: var(--surface-color) !important;
+  }
+
+  .mat-mdc-form-field-focus-overlay {
+    border-radius: var(--radius-md) !important;
+  }
+
+  // Mejor padding para inputs
+  .mat-mdc-input-element {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+  }
+
+  // Padding para textarea
+  .mat-mdc-input-element[type="textarea"],
+  textarea.mat-mdc-input-element {
+    padding: 12px 16px !important;
+  }
+
+  // Espaciado para el label flotante
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-form-field-infix {
+      padding: 14px 0 14px 0 !important;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      padding: 0 !important;
+    }
+
+    .mat-mdc-notched-outline {
+      border-width: 1.5px !important;
+      border-color: var(--border-color) !important;
+      transition: all var(--transition-fast) !important;
+    }
+
+    &:hover .mat-mdc-notched-outline {
+      border-color: var(--primary-color) !important;
+      opacity: 0.7;
+    }
+
+    &.mat-focused .mat-mdc-notched-outline {
+      border-color: var(--primary-color) !important;
+      border-width: 2px !important;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+    }
+
+    .mat-mdc-floating-label {
+      top: 28px !important;
+      font-size: 15px !important;
+      color: var(--text-secondary) !important;
+    }
+
+    &.mat-form-field-can-float.mat-form-field-should-float .mat-mdc-floating-label,
+    &.mat-form-field-can-float .mat-mdc-input-element:focus ~ .mat-mdc-floating-label {
+      transform: translateY(-25px) scale(0.85) !important;
+      color: var(--primary-color) !important;
+    }
+  }
+
+  // Mejoras para el estado de error
+  &.mat-form-field-invalid {
+    .mat-mdc-notched-outline {
+      border-color: var(--error-color) !important;
+    }
+  }
+
+  // Hint text mejorado
+  .mat-mdc-form-field-hint,
+  .mat-mdc-form-field-error {
+    font-size: 13px !important;
+    margin-top: 6px !important;
+  }
+}
+
+// Mejoras para datepicker
+.mat-datepicker-toggle {
+  .mat-mdc-icon-button {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 8px !important;
+  }
+}
+
+// Datepicker panel mejorado
+.mat-datepicker-content {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border: 2px solid var(--border-color) !important;
+  background-color: var(--surface-color) !important;
+  padding: 8px !important;
+
+  .mat-calendar {
+    font-family: inherit !important;
+
+    .mat-calendar-header {
+      padding: 12px 16px !important;
+      background-color: var(--primary-light) !important;
+      border-radius: var(--radius-md) !important;
+      margin-bottom: 12px !important;
+    }
+
+    .mat-calendar-controls {
+      .mat-mdc-icon-button {
+        &:hover {
+          background-color: rgba(79, 70, 229, 0.1) !important;
+        }
+      }
+    }
+
+    .mat-calendar-period-button {
+      font-weight: 600 !important;
+      font-size: 15px !important;
+      color: var(--primary-color) !important;
+
+      &:hover {
+        background-color: rgba(79, 70, 229, 0.1) !important;
+      }
+    }
+
+    .mat-calendar-body-label {
+      font-weight: 600 !important;
+      color: var(--text-secondary) !important;
+      font-size: 13px !important;
+    }
+
+    .mat-calendar-body-cell {
+      border-radius: var(--radius-sm) !important;
+
+      &:hover .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+        background-color: var(--primary-light) !important;
+      }
+    }
+
+    .mat-calendar-body-cell-content {
+      border-radius: var(--radius-sm) !important;
+      font-weight: 500 !important;
+      transition: all var(--transition-fast) !important;
+
+      &.mat-calendar-body-selected {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        box-shadow: var(--shadow-sm) !important;
+      }
+
+      &.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+        border: 2px solid var(--primary-color) !important;
+        color: var(--primary-color) !important;
+        font-weight: 600 !important;
+      }
+    }
+  }
+}
+
+// Backdrop del datepicker
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing.mat-datepicker-backdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(3px) !important;
+}
+
+// Select mejorado
+.mat-mdc-select {
+  .mat-mdc-select-trigger {
+    padding: 12px 16px !important;
+  }
+
+  .mat-mdc-select-arrow {
+    color: var(--text-secondary) !important;
+  }
+}
+
+// Select panel mejorado (dropdown)
+.mat-mdc-select-panel {
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border: 2px solid var(--border-color) !important;
+  background-color: var(--surface-color) !important;
+  padding: 8px 0 !important;
+  margin-top: 8px !important;
+  max-height: 320px !important;
+
+  .mat-mdc-option {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    transition: all var(--transition-fast) !important;
+    border-radius: 0 !important;
+
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: var(--primary-light) !important;
+    }
+
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: var(--primary-color) !important;
+      color: white !important;
+      font-weight: 600 !important;
+
+      .mdc-list-item__primary-text {
+        color: white !important;
+      }
+    }
+
+    &:active:not(.mdc-list-item--disabled) {
+      background-color: var(--primary-hover) !important;
+    }
+  }
+}
+
+// Backdrop del select
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing:not(.mat-datepicker-backdrop) {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+// Autocomplete panel mejorado
+.mat-mdc-autocomplete-panel {
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border: 2px solid var(--border-color) !important;
+  background-color: var(--surface-color) !important;
+  padding: 8px 0 !important;
+  margin-top: 8px !important;
+  max-height: 320px !important;
+
+  .mat-mdc-option {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    transition: all var(--transition-fast) !important;
+
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: var(--primary-light) !important;
+    }
+
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: var(--primary-color) !important;
+      color: white !important;
+      font-weight: 600 !important;
+    }
+  }
+}
+
+/* Iconos en avatares */
+.mat-mdc-card-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white !important;
+  border-radius: 50%;
+}
+
+/* Toolbar mejorado */
+.mat-toolbar {
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Progress spinner */
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--primary-color) !important;
+}
+
+/* Lista de navegación */
+.mat-mdc-list-item {
+  border-radius: var(--radius-md) !important;
+  margin: 4px 8px !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover {
+    background-color: var(--primary-light) !important;
+  }
+}
+
+/* Chips mejorados */
+.mat-mdc-chip {
+  border-radius: var(--radius-md) !important;
+  font-weight: 500 !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md) !important;
+  }
+}
+
+/* Snackbar mejorado */
+.mat-mdc-snack-bar-container {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
+  padding: 16px 24px !important;
+
+  .mdc-snackbar__label {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+  }
+
+  &.success-snackbar {
+    background-color: var(--success-color) !important;
+
+    .mdc-snackbar__label {
+      color: white !important;
+    }
+  }
+
+  &.error-snackbar {
+    background-color: var(--error-color) !important;
+
+    .mdc-snackbar__label {
+      color: white !important;
+    }
+  }
+}
+
+/* Expansion panel mejorado */
+.mat-expansion-panel {
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-sm) !important;
+  margin-bottom: 12px !important;
+  border: 1px solid var(--border-color) !important;
+  transition: all var(--transition-normal) !important;
+
+  &:hover {
+    box-shadow: var(--shadow-md) !important;
+  }
+
+  .mat-expansion-panel-header {
+    border-radius: var(--radius-md) !important;
+    padding: 16px 20px !important;
+    font-weight: 500 !important;
+    transition: background-color var(--transition-fast) !important;
+
+    &:hover {
+      background-color: var(--primary-light) !important;
+    }
+  }
+
+  .mat-expansion-panel-body {
+    padding: 20px !important;
+  }
+}
+
+/* Dialog mejorado */
+.mat-mdc-dialog-container {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
+  padding: 0 !important;
+
+  .mat-mdc-dialog-title {
+    padding: 24px 24px 16px !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+  }
+
+  .mat-mdc-dialog-content {
+    padding: 0 24px !important;
+    max-height: 65vh !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 16px 24px 24px !important;
+    gap: 12px !important;
+  }
+}
+
+/* Tabla mejorada */
+.mat-mdc-table {
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-md) !important;
+  border: 1px solid var(--border-color) !important;
+
+  .mat-mdc-header-row {
+    background-color: var(--primary-light) !important;
+
+    .mat-mdc-header-cell {
+      font-weight: 600 !important;
+      color: var(--primary-color) !important;
+      font-size: 14px !important;
+      letter-spacing: 0.3px !important;
+      padding: 16px !important;
+    }
+  }
+
+  .mat-mdc-row {
+    transition: background-color var(--transition-fast) !important;
+
+    &:hover {
+      background-color: var(--background-color) !important;
+    }
+
+    .mat-mdc-cell {
+      padding: 14px 16px !important;
+      font-size: 14px !important;
+    }
+  }
+}
+
+/* Tabs mejorados */
+.mat-mdc-tab-group {
+  .mat-mdc-tab-labels {
+    border-bottom: 2px solid var(--border-color) !important;
+  }
+
+  .mat-mdc-tab {
+    font-weight: 500 !important;
+    transition: all var(--transition-fast) !important;
+
+    &:hover {
+      background-color: var(--primary-light) !important;
+    }
+  }
+
+  .mat-mdc-tab-body-wrapper {
+    padding-top: 24px !important;
+  }
+}

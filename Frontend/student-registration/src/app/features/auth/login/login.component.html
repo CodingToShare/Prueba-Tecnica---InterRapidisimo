@@ -1,0 +1,54 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Iniciar Sesión</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuario o Email</mat-label>
+          <input matInput formControlName="usernameOrEmail" required>
+          @if (loginForm.get('usernameOrEmail')?.hasError('required') && loginForm.get('usernameOrEmail')?.touched) {
+            <mat-error>
+              Usuario o Email es requerido.
+            </mat-error>
+          }
+          @if (loginForm.get('usernameOrEmail')?.hasError('minlength') && loginForm.get('usernameOrEmail')?.touched) {
+            <mat-error>
+              Usuario o Email debe tener al menos 3 caracteres.
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput formControlName="password" type="password" required>
+          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+            <mat-error>
+              Contraseña es requerida.
+            </mat-error>
+          }
+          @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
+            <mat-error>
+              Contraseña debe tener al menos 6 caracteres.
+            </mat-error>
+          }
+        </mat-form-field>
+
+
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading" class="full-width">
+          @if (!isLoading) {
+            <span>Ingresar</span>
+          }
+          @if (isLoading) {
+            <mat-spinner [diameter]="24"></mat-spinner>
+          }
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="login-actions">
+      <a mat-button routerLink="/auth/register">¿No tienes cuenta? Regístrate</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

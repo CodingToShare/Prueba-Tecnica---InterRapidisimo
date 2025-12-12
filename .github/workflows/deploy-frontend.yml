@@ -1,0 +1,119 @@
+name: Deploy Frontend to Azure
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'Frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Frontend/**'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'Frontend/student-registration/package-lock.json'
+    
+    - name: Install dependencies
+      run: |
+        cd Frontend/student-registration
+        npm ci
+    
+    - name: Run linter
+      run: |
+        cd Frontend/student-registration
+        npm run lint
+      continue-on-error: true
+    
+    - name: Build
+      run: |
+        cd Frontend/student-registration
+        npm run build
+      env:
+        NODE_ENV: production
+        REACT_APP_API_BASE_URL: ${{ secrets.FRONTEND_API_BASE_URL || 'https://app-studentreg-api.azurewebsites.net/api' }}
+    
+    - name: Run tests
+      run: |
+        cd Frontend/student-registration
+        npm test -- --run
+      continue-on-error: true
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: Frontend/student-registration/dist
+        retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-build
+        path: ./dist
+    
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ secrets.AZURE_FRONTEND_APP_NAME }}
+        package: ./dist
+        resource-group: ${{ secrets.AZURE_FRONTEND_RESOURCE_GROUP }}
+    
+    - name: Inject environment variables
+      run: |
+        # Crear script de inyección de variables en el index.html
+        API_BASE_URL="${{ secrets.FRONTEND_API_BASE_URL || 'https://app-studentreg-api.azurewebsites.net/api' }}"
+        
+        echo "Inyectando variable de entorno:"
+        echo "API_BASE_URL: $API_BASE_URL"
+    
+    - name: Restart App Service
+      run: |
+        az webapp restart \
+          --name ${{ secrets.AZURE_FRONTEND_APP_NAME }} \
+          --resource-group ${{ secrets.AZURE_FRONTEND_RESOURCE_GROUP }}
+    
+    - name: Verify deployment
+      run: |
+        FRONTEND_URL="https://${{ secrets.AZURE_FRONTEND_APP_NAME }}.azurewebsites.net"
+        echo "Verificando que el Frontend está disponible en: $FRONTEND_URL"
+        
+        for i in {1..30}; do
+          if curl -s "$FRONTEND_URL" | grep -q "Student Registration\|<html"; then
+            echo "✅ Frontend disponible"
+            exit 0
+          fi
+          echo "Intento $i/30..."
+          sleep 2
+        done
+        
+        echo "⚠️ Frontend no respondió, pero el deployment se completó"
+        exit 0

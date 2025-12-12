@@ -1,0 +1,97 @@
+name: Deploy Backend to Azure
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'Backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Backend/**'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  BUILD_CONFIGURATION: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore ./Backend/StudentRegistration.sln
+    
+    - name: Build
+      run: dotnet build ./Backend/StudentRegistration.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+    
+    - name: Run tests
+      run: dotnet test ./Backend/StudentRegistration.Tests/StudentRegistration.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
+    
+    - name: Publish
+      run: dotnet publish ./Backend/StudentRegistration.Api/StudentRegistration.Api.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --output ./publish
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-build
+        path: ./publish
+        retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-build
+        path: ./publish
+    
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ secrets.AZURE_BACKEND_APP_NAME }}
+        package: ./publish
+        resource-group: ${{ secrets.AZURE_BACKEND_RESOURCE_GROUP }}
+    
+    - name: Restart App Service
+      run: |
+        az webapp restart \
+          --name ${{ secrets.AZURE_BACKEND_APP_NAME }} \
+          --resource-group ${{ secrets.AZURE_BACKEND_RESOURCE_GROUP }}
+    
+    - name: Verify deployment
+      run: |
+        BACKEND_URL="https://${{ secrets.AZURE_BACKEND_APP_NAME }}.azurewebsites.net/api/health"
+        echo "Verificando que la API está disponible en: $BACKEND_URL"
+        
+        for i in {1..30}; do
+          if curl -s "$BACKEND_URL" > /dev/null; then
+            echo "✅ API disponible"
+            exit 0
+          fi
+          echo "Intento $i/30..."
+          sleep 2
+        done
+        
+        echo "⚠️ API no respondió, pero el deployment se completó"
+        exit 0

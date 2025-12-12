@@ -11,7 +11,7 @@
           <h3>Información de Cuenta</h3>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Nombre de Usuario</mat-label>
-            <input matInput formControlName="username" required>
+            <input matInput formControlName="username" required aria-label="Nombre de Usuario">
             @if (registerForm.get('username')?.hasError('required') && registerForm.get('username')?.touched) {
               <mat-error>Nombre de Usuario es requerido.</mat-error>
             }
@@ -25,7 +25,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" required>
+            <input matInput formControlName="email" type="email" required aria-label="Email">
             @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
               <mat-error>Email es requerido.</mat-error>
             }
@@ -39,7 +39,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contraseña</mat-label>
-            <input matInput formControlName="password" type="password" required>
+            <input matInput formControlName="password" type="password" required aria-label="Contraseña">
             @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
               <mat-error>Contraseña es requerida.</mat-error>
             }
@@ -50,7 +50,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Confirmar Contraseña</mat-label>
-            <input matInput formControlName="confirmPassword" type="password" required>
+            <input matInput formControlName="confirmPassword" type="password" required aria-label="Confirmar Contraseña">
             @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
               <mat-error>Confirmación de contraseña es requerida.</mat-error>
             }
@@ -66,7 +66,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field-half">
               <mat-label>Nombres</mat-label>
-              <input matInput formControlName="firstName" required>
+              <input matInput formControlName="firstName" required aria-label="Nombres">
               @if (registerForm.get('firstName')?.hasError('required') && registerForm.get('firstName')?.touched) {
                 <mat-error>Nombres es requerido.</mat-error>
               }
@@ -74,7 +74,7 @@
 
             <mat-form-field appearance="outline" class="form-field-half">
               <mat-label>Apellidos</mat-label>
-              <input matInput formControlName="lastName" required>
+              <input matInput formControlName="lastName" required aria-label="Apellidos">
               @if (registerForm.get('lastName')?.hasError('required') && registerForm.get('lastName')?.touched) {
                 <mat-error>Apellidos es requerido.</mat-error>
               }
@@ -83,7 +83,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Número de Estudiante</mat-label>
-            <input matInput formControlName="studentNumber" required pattern="^\d+$">
+            <input matInput formControlName="studentNumber" required pattern="^\d+$" aria-label="Número de Estudiante">
             @if (registerForm.get('studentNumber')?.hasError('required') && registerForm.get('studentNumber')?.touched) {
               <mat-error>Número de Estudiante es requerido.</mat-error>
             }
@@ -97,7 +97,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Fecha de Nacimiento</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required>
+            <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required aria-label="Fecha de Nacimiento">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             @if (registerForm.get('dateOfBirth')?.hasError('required') && registerForm.get('dateOfBirth')?.touched) {
@@ -107,7 +107,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Número de Teléfono</mat-label>
-            <input matInput formControlName="phoneNumber" required pattern="^\d{10}$">
+            <input matInput formControlName="phoneNumber" required pattern="^\d{10}$" aria-label="Número de Teléfono">
             @if (registerForm.get('phoneNumber')?.hasError('required') && registerForm.get('phoneNumber')?.touched) {
               <mat-error>Teléfono es requerido.</mat-error>
             }
@@ -118,7 +118,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Dirección</mat-label>
-            <input matInput formControlName="address" required>
+            <input matInput formControlName="address" required aria-label="Dirección">
             @if (registerForm.get('address')?.hasError('required') && registerForm.get('address')?.touched) {
               <mat-error>Dirección es requerida.</mat-error>
             }

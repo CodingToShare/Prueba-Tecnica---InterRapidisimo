@@ -309,6 +309,7 @@ body {
 // Backdrop del datepicker
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing.mat-datepicker-backdrop {
   background-color: rgba(0, 0, 0, 0.5) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
   backdrop-filter: blur(3px) !important;
 }
 
@@ -362,6 +363,7 @@ body {
 // Backdrop del select
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing:not(.mat-datepicker-backdrop) {
   background-color: rgba(0, 0, 0, 0.4) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
   backdrop-filter: blur(2px) !important;
 }
 

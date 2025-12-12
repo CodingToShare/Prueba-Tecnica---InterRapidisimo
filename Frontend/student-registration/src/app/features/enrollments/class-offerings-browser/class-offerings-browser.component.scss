@@ -46,6 +46,8 @@
   mat-form-field {
     width: 100%;
     font-size: 1.05rem;
+    display: block;
+    margin-bottom: 16px;
 
     .mat-mdc-text-field-wrapper {
       background-color: white;

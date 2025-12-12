@@ -1,0 +1,5 @@
+<!-- 
+  Script de inyección de variables de entorno para el Frontend
+  Este script debe incluirse en el index.html para que las variables estén disponibles
+  en tiempo de ejecución (runtime)
+-->\n\n<!-- Inyección de variables de entorno de Azure en tiempo de ejecución -->\n<script>\n  // Objeto global para almacenar variables de configuración\n  window.APP_CONFIG = window.APP_CONFIG || {};\n  \n  // Inyectar variables de entorno\n  // Estas variables se establecen durante el deployment en Azure\n  window.APP_CONFIG.apiBaseUrl = '${REACT_APP_API_BASE_URL}' || 'http://localhost:5004';\n  window.APP_CONFIG.environment = '${NODE_ENV}' || 'development';\n  window.APP_CONFIG.version = '${npm_package_version}' || '1.0.0';\n  window.APP_CONFIG.appName = 'Student Registration System';\n  \n  // Debug: mostrar configuración en consola (solo en desarrollo)\n  if (window.APP_CONFIG.environment === 'development') {\n    console.log('🔧 App Configuration Loaded:', {\n      apiBaseUrl: window.APP_CONFIG.apiBaseUrl,\n      environment: window.APP_CONFIG.environment,\n      version: window.APP_CONFIG.version\n    });\n  }\n</script>\n

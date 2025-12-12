@@ -68,7 +68,7 @@
 .mat-panel-title {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   font-weight: 600;
   font-size: 1.2em;
   color: var(--text-primary);
@@ -79,11 +79,13 @@
     font-size: 28px;
     width: 28px;
     height: 28px;
+    flex-shrink: 0;
   }
 
   .subject-name {
     flex: 1;
     min-width: 200px;
+    margin-right: 16px;
   }
 }
 
@@ -97,6 +99,8 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-left: auto;
+  flex-shrink: 0;
 
   mat-icon {
     font-size: 18px !important;

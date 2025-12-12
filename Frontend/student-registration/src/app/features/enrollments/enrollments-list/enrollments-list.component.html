@@ -17,7 +17,12 @@
           <mat-card class="enrollment-card">
             <mat-card-header>
               <mat-icon mat-card-avatar>book</mat-icon>
-              <mat-card-title>{{ enrollment.subjectName }}</mat-card-title>
+              <div class="title-with-badge">
+                <mat-card-title>{{ enrollment.subjectName }}</mat-card-title>
+                <span [ngClass]="'status-badge badge-' + enrollment.status.toLowerCase()">
+                  {{ enrollment.status === 'Active' ? 'ACTIVA' : enrollment.status === 'Cancelled' || enrollment.status === 'Dropped' ? 'CANCELADA' : enrollment.status }}
+                </span>
+              </div>
               <mat-card-subtitle>{{ enrollment.professorFullName }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
@@ -25,15 +30,16 @@
               <p><strong>Créditos:</strong> {{ enrollment.credits }}</p>
               <p><strong>Periodo:</strong> {{ enrollment.academicPeriod }}</p>
               <p><strong>Horario:</strong> {{ enrollment.schedule }}</p>
-              <p><strong>Estado:</strong> {{ enrollment.status }}</p>
               @if (enrollment.notes) {
                 <p><strong>Notas:</strong> {{ enrollment.notes }}</p>
               }
             </mat-card-content>
             <mat-card-actions align="end">
-              <button mat-button color="warn" (click)="cancelEnrollment(enrollment.id)">
-                <mat-icon>cancel</mat-icon> Cancelar
-              </button>
+              @if (enrollment.status === 'Active') {
+                <button mat-button color="warn" (click)="cancelEnrollment(enrollment.id)">
+                  <mat-icon>cancel</mat-icon> Cancelar
+                </button>
+              }
               <!-- <button mat-button color="accent">Ver Compañeros</button> -->
             </mat-card-actions>
           </mat-card>

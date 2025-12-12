@@ -1,0 +1,48 @@
+name: CI Backend - Build & Test
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'Backend/**'
+      - '.github/workflows/ci-backend.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'Backend/**'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  BUILD_CONFIGURATION: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore ./Backend/StudentRegistration.sln
+    
+    - name: Build
+      run: dotnet build ./Backend/StudentRegistration.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+    
+    - name: Run tests
+      run: dotnet test ./Backend/StudentRegistration.Tests/StudentRegistration.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal
+    
+    - name: Publish
+      run: dotnet publish ./Backend/StudentRegistration.Api/StudentRegistration.Api.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --output ./publish
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-build
+        path: ./publish
+        retention-days: 5
